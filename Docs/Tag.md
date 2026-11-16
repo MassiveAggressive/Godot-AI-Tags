@@ -1,6 +1,6 @@
 # Tag Sistemi — Plan
 
-> Durum: **uygulandı** (2026-11-16).
+> Durum: **uygulandı** (2026-11-16). Bağımsız Godot addon'u: `addons/Tags/`, namespace `Tags`, repo Godot-AI-Tags.
 > Karşılığı: Unreal `GameplayTag`, `GameplayTagContainer`, `GameplayTagCountContainer`, `GameplayTagsManager`.
 
 ## Amaç
@@ -14,8 +14,8 @@ Hiyerarşi kuralı: `Ability.Fire.Ball` tag'ine sahip olan, `Ability.Fire` ve `A
 ## Kararlar
 | Konu | Karar |
 |---|---|
-| Tag kaynağı | Tüm tag'ler `Resource/Tags/Tags.tres` (`TagList`) içinde tanımlanır. |
-| Başlatma | `TagLoader` Autoload düğümü oyun başında `Tags.tres`'i yükler ve `TagRegistry`'yi başlatır. |
+| Tag kaynağı | Tüm tag'ler projeye ait bir `TagList` resource'unda (varsayılan `res://Resource/Tags/Tags.tres`) tanımlanır. Dosya addon'un içinde değildir; yolu `tags/tag_list_path` project setting'inden okunur. |
+| Başlatma | `TagLoader` Autoload düğümü oyun başında tag listesini yükler ve `TagRegistry`'yi başlatır. Autoload'u `TagsPlugin` ekler. |
 | Ağ (replication) | Kapsam dışı. |
 
 ## Sınıflar
@@ -26,8 +26,9 @@ Hiyerarşi kuralı: `Ability.Fire.Ball` tag'ine sahip olan, `Ability.Fire` ve `A
 | `TagRegistry` | düz C# `static class` | `Core/TagRegistry/` | Tag isimlerini id'ye çevirir, ebeveyn zincirini tutar, hiyerarşik eşleşmeyi cevaplar. |
 | `TagContainer` | Godot `Resource` (`[Tool]`) | `Core/TagContainer/` | Editörden düzenlenebilen, az değişen tag kümesi (ability'nin kendi tag'leri, engellenen tag'ler vb.). |
 | `TagCountContainer` | düz C# `class` | `Core/TagCountContainer/` | Aktörün **canlı** tag durumu. Her tag için sayaç; aynı tag'i birden fazla kaynak ekleyebilir. Değişim olayları buradan çıkar. |
-| `TagList` | Godot `Resource` | `Core/TagList/` | Projedeki tüm tag isimlerinin editörde tutulduğu liste. Verisi `Resource/Tags/Tags.tres`. |
-| `TagLoader` | Godot `Node` (Autoload) | `Core/TagLoader/` | Oyun başında `Tags.tres`'i yükleyip `TagRegistry.Initialize` çağırır. Başka iş yapmaz. |
+| `TagList` | Godot `Resource` | `Core/TagList/` | Projedeki tüm tag isimlerinin editörde tutulduğu liste. Verisi projede (varsayılan `res://Resource/Tags/Tags.tres`). |
+| `TagLoader` | Godot `Node` (Autoload) | `Core/TagLoader/` | Oyun başında tag listesini yükleyip `TagRegistry.Initialize` çağırır. Başka iş yapmaz. |
+| `TagsPlugin` | Godot `EditorPlugin` (`#if TOOLS`) | `Core/TagsPlugin/` | Plugin etkinleşince `TagLoader` autoload'unu ve `tags/tag_list_path` ayarını ekler, devre dışı kalınca autoload'u kaldırır. |
 
 `TagRequirements` / `TagQuery` (karmaşık sorgular) **şimdilik yok**. Ability/Effect tarafında ihtiyaç doğarsa eklenir.
 
@@ -92,11 +93,17 @@ Hiyerarşi kuralı: `Ability.Fire.Ball` tag'ine sahip olan, `Ability.Fire` ve `A
 ### TagList (Resource)
 - `[Tool]`, `[GlobalClass]`, `[Export] string[] Tags`: editörde düzenlenen liste. Godot tipi burada zorunlu (editör serileştirmesi).
 - `[Tool]` gerekli: yoksa editör `Tags.tres`'i yer tutucu olarak yükler ve `TagContainer` menüsü dolmaz.
-- `DefaultPath` sabiti: `res://Resource/Tags/Tags.tres`.
+- `TagList.GetListPath()`: `tags/tag_list_path` ayarını, yoksa `DefaultPath` (`res://Resource/Tags/Tags.tres`) değerini döndürür. `TagLoader` ve editör dropdown'u bunu kullanır.
 
 ### TagLoader (Autoload)
-- `project.godot` → `[autoload]` içinde script olarak kayıtlı (sahne yok, export gerekmiyor).
-- `_EnterTree`'de `res://Resource/Tags/Tags.tres`'i yükler; Autoload'lar ana sahneden önce ağaca girdiği için diğer sistemler hazır registry bulur.
+- `TagsPlugin` tarafından script olarak autoload'a eklenir (sahne yok, export gerekmiyor).
+- `_EnterTree`'de `TagList.GetListPath()` yolundaki listeyi yükler; Autoload'lar ana sahneden önce ağaca girdiği için diğer sistemler hazır registry bulur.
+
+## Kurulum (başka bir projede)
+1. `addons/Tags/` klasörünü projeye kopyala (veya repoyu oraya klonla).
+2. Projeyi C# olarak derle, sonra Project → Project Settings → Plugins'ten **Tags**'i etkinleştir. `TagLoader` autoload'u ve `tags/tag_list_path` ayarı otomatik eklenir.
+3. `tags/tag_list_path` yolunda (varsayılan `res://Resource/Tags/Tags.tres`) bir `TagList` resource'u oluştur ve tag isimlerini gir.
+4. Kodda `using Tags;` ile kullan.
 
 ## Editör / Veri Tarafı
 - `Tag` struct'ı Godot editöründe `Export` edilemez. Diğer resource'lar (`AbilityData`, `EffectData`) tag'leri `[Export] TagContainer` olarak tutar; tag'ler açılır menüden seçilir.
@@ -105,6 +112,8 @@ Hiyerarşi kuralı: `Ability.Fire.Ball` tag'ine sahip olan, `Ability.Fire` ve `A
 
 ## Bağımlılıklar
 ```
+TagsPlugin ──► TagLoader (autoload ekler)
+
 TagLoader ──► TagList (Tags.tres)
     │
     ▼
@@ -112,7 +121,7 @@ TagRegistry ◄── Tag ◄── TagContainer
                   ▲
                   └──── TagCountContainer
 ```
-Tag sistemi Ability/Effect/Attribute'u **bilmez**. En alt katmandır.
+Tag sistemi başka hiçbir addon'u (AbilitySystem dahil) **bilmez**. En alt katmandır.
 
 ## StringName Neden Kullanılmadı
 - Çalışma anında tag'ler `int Id` ile karşılaştırılır; bu, `StringName` karşılaştırmasından da hızlıdır ve Godot'a geçiş (interop) gerektirmez.

@@ -1,7 +1,7 @@
 using System;
 using Godot;
 
-namespace AbilitySystem;
+namespace Tags;
 
 /// <summary>
 /// Live tag state of an actor. Each tag has a counter so several sources can grant the same tag.

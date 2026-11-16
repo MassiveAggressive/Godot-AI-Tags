@@ -1,6 +1,6 @@
 using System;
 
-namespace AbilitySystem;
+namespace Tags;
 
 /// <summary>
 /// Hierarchical tag such as "Ability.Fire.Ball". Holds only a numeric id; create through <see cref="TagRegistry.Request"/>.

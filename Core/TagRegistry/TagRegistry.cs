@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-namespace AbilitySystem;
+namespace Tags;
 
 /// <summary>
 /// Maps tag names to ids and stores the parent chain. Initialized once by <see cref="TagLoader"/>, then locked.

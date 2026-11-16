@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Godot;
 
-namespace AbilitySystem;
+namespace Tags;
 
 /// <summary>
 /// Inspector-editable tag set. Initial tags are picked from a dropdown fed by Tags.tres and resolved to ids on first use.
@@ -118,7 +118,7 @@ public partial class TagContainer : Resource
     /// <summary>Comma separated, sorted tag names from Tags.tres including parents. Editor only.</summary>
     internal static string BuildTagOptions()
     {
-        var tagList = GD.Load<TagList>(TagList.DefaultPath);
+        var tagList = GD.Load<TagList>(TagList.GetListPath());
         if (tagList == null)
             return string.Empty;
 

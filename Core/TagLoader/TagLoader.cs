@@ -1,6 +1,6 @@
 using Godot;
 
-namespace AbilitySystem;
+namespace Tags;
 
 /// <summary>
 /// Autoload that loads <see cref="TagList"/> and initializes <see cref="TagRegistry"/> before the main scene.
@@ -12,10 +12,11 @@ public partial class TagLoader : Node
         if (TagRegistry.IsInitialized)
             return;
 
-        var tagList = GD.Load<TagList>(TagList.DefaultPath);
+        string path = TagList.GetListPath();
+        var tagList = GD.Load<TagList>(path);
         if (tagList == null)
         {
-            GD.PushError($"TagLoader: could not load TagList at '{TagList.DefaultPath}'.");
+            GD.PushError($"TagLoader: could not load TagList at '{path}'.");
             return;
         }
 
