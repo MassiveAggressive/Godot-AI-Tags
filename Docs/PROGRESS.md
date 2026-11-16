@@ -9,6 +9,7 @@
 - [x] `TagContainer` Resource'a çevrildi; `InitialTags` editörde tag listesinden beslenen açılır menüyle seçiliyor — [Claude, 2026-11-16]
 - [x] `TagContainer` depolama yapısı ölçülüp karara bağlandı: `List<Tag>` kalıyor — [Claude, 2026-11-17]
 - [x] Bağımsız addon'a çevrildi (Godot-AI-Tags): namespace `Tags`, `plugin.cfg` + `TagsPlugin` (autoload ve `tags/tag_list_path` ayarını ekler), tag listesi projeye taşındı — [Claude, 2026-11-17]
+- [x] Klasör yapısı sadeleştirildi: `Core/` ve `Assets/` kalktı, sınıf klasörleri doğrudan addon kökünde (`RULES.md` §4, kullanıcı kararı) — [Claude, 2026-11-17]
 
 ## Yapılıyor
 - (boş)

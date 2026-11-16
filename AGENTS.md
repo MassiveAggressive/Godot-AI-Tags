@@ -12,7 +12,7 @@ AbilitySystem addon'u (`addons/AbilitySystem/`, Godot-AI-AbilitySystem) bu addon
 ## Hatırlatma (özet — ayrıntı RULES.md'de)
 - İsimlerde **`Gameplay` ön eki yok**.
 - Modüler, okunaklı; **aşırı soyutlama ve aşırı bağımlılık yok**; tek sınıf her işi yapmaz.
-- **Her sınıf `addons/Tags/Core/<Sinif>/` klasöründe**, sahnesi de aynı klasörde. Projeye özel veriler (ör. `Tags.tres`) addon'a değil proje kökündeki `Resource/` klasörüne gider.
+- **Her sınıf `addons/Tags/<Sinif>/` klasöründe** (ara `Core/`, `Assets/` klasörü yok), sahnesi de aynı klasörde. Projeye özel veriler (ör. `Tags.tres`) addon'a değil proje kökündeki `Resource/` klasörüne gider.
 - **Sahne kuralı:** Önce `Node2D`/`Node`/`Control` ekleyip sonra script bağlamak **yasak**. Düğüm doğrudan özel sınıftan, `script = ExtResource(...)` + `metadata/_custom_type_script = "uid://..."` ile yaratılır. UID'yi `.cs.uid` dosyasından al, uydurma.
 - **Performans önemli:** hot-path'te allocation/LINQ/boxing yok. Çalışma anında tag'ler `int Id` ile karşılaştırılır, string kullanılmaz.
 - Mümkün olduğunca **saf C#** (`List`, `Dictionary`, `event`, `struct`); gereksiz yere Godot `Array`/`Dictionary`/`Variant`/`Signal` kullanma.

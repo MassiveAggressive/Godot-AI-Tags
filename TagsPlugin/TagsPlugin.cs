@@ -10,7 +10,7 @@ namespace Tags;
 public partial class TagsPlugin : EditorPlugin
 {
     private const string AutoloadName = "TagLoader";
-    private const string AutoloadPath = "res://addons/Tags/Core/TagLoader/TagLoader.cs";
+    private const string AutoloadPath = "res://addons/Tags/TagLoader/TagLoader.cs";
 
     public override void _EnterTree()
     {

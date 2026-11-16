@@ -22,13 +22,13 @@ Hiyerarşi kuralı: `Ability.Fire.Ball` tag'ine sahip olan, `Ability.Fire` ve `A
 
 | Sınıf | Tür | Klasör | Sorumluluk |
 |---|---|---|---|
-| `Tag` | `readonly struct` | `Core/Tag/` | Tek bir etiket. İçinde sadece `int Id`. Karşılaştırma sayıyla, string yok. |
-| `TagRegistry` | düz C# `static class` | `Core/TagRegistry/` | Tag isimlerini id'ye çevirir, ebeveyn zincirini tutar, hiyerarşik eşleşmeyi cevaplar. |
-| `TagContainer` | Godot `Resource` (`[Tool]`) | `Core/TagContainer/` | Editörden düzenlenebilen, az değişen tag kümesi (ability'nin kendi tag'leri, engellenen tag'ler vb.). |
-| `TagCountContainer` | düz C# `class` | `Core/TagCountContainer/` | Aktörün **canlı** tag durumu. Her tag için sayaç; aynı tag'i birden fazla kaynak ekleyebilir. Değişim olayları buradan çıkar. |
-| `TagList` | Godot `Resource` | `Core/TagList/` | Projedeki tüm tag isimlerinin editörde tutulduğu liste. Verisi projede (varsayılan `res://Resource/Tags/Tags.tres`). |
-| `TagLoader` | Godot `Node` (Autoload) | `Core/TagLoader/` | Oyun başında tag listesini yükleyip `TagRegistry.Initialize` çağırır. Başka iş yapmaz. |
-| `TagsPlugin` | Godot `EditorPlugin` (`#if TOOLS`) | `Core/TagsPlugin/` | Plugin etkinleşince `TagLoader` autoload'unu ve `tags/tag_list_path` ayarını ekler, devre dışı kalınca autoload'u kaldırır. |
+| `Tag` | `readonly struct` | `Tag/` | Tek bir etiket. İçinde sadece `int Id`. Karşılaştırma sayıyla, string yok. |
+| `TagRegistry` | düz C# `static class` | `TagRegistry/` | Tag isimlerini id'ye çevirir, ebeveyn zincirini tutar, hiyerarşik eşleşmeyi cevaplar. |
+| `TagContainer` | Godot `Resource` (`[Tool]`) | `TagContainer/` | Editörden düzenlenebilen, az değişen tag kümesi (ability'nin kendi tag'leri, engellenen tag'ler vb.). |
+| `TagCountContainer` | düz C# `class` | `TagCountContainer/` | Aktörün **canlı** tag durumu. Her tag için sayaç; aynı tag'i birden fazla kaynak ekleyebilir. Değişim olayları buradan çıkar. |
+| `TagList` | Godot `Resource` | `TagList/` | Projedeki tüm tag isimlerinin editörde tutulduğu liste. Verisi projede (varsayılan `res://Resource/Tags/Tags.tres`). |
+| `TagLoader` | Godot `Node` (Autoload) | `TagLoader/` | Oyun başında tag listesini yükleyip `TagRegistry.Initialize` çağırır. Başka iş yapmaz. |
+| `TagsPlugin` | Godot `EditorPlugin` (`#if TOOLS`) | `TagsPlugin/` | Plugin etkinleşince `TagLoader` autoload'unu ve `tags/tag_list_path` ayarını ekler, devre dışı kalınca autoload'u kaldırır. |
 
 `TagRequirements` / `TagQuery` (karmaşık sorgular) **şimdilik yok**. Ability/Effect tarafında ihtiyaç doğarsa eklenir.
 

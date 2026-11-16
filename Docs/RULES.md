@@ -37,31 +37,23 @@ Proje iki Godot addon'undan oluşur. **Her addon ayrı bir git reposudur**; proj
 - **`Test/` klasörü kullanıcıya aittir; dokunma, taşıma, commit'leme.**
 - Git komutlarını ilgili addon klasöründe çalıştır (`git -C addons/<Addon> ...`).
 
-Her addon içindeki ana klasörler: `Assets/`, `Core/`, `Resource/`, `Docs/`.
+Addon'un içinde `Core/`, `Assets/`, `Resource/` gibi ara klasörler **yoktur**. Sınıf klasörleri doğrudan addon klasörünün altında başlar; tek istisna `Docs/` (kurallar, mimari, ilerleme).
 
-| Klasör | İçerik |
-|---|---|
-| `Assets/` | Görseller, sesler, fontlar vb. ham varlıklar |
-| `Core/` | Tüm C# sınıfları ve sahneler |
-| `Resource/` | Addon ile birlikte gelen `.tres` / `.res` resource **dosyaları** (veri) |
-| `Docs/` | Kurallar, mimari, ilerleme dosyaları |
-
-**Kural: her sınıf kendi klasöründe, o klasör addon'un `Core/` klasörü altında.**
+**Kural: her sınıf kendi klasöründe, o klasör doğrudan addon klasörünün altında.**
 ```
 addons/AbilitySystem/
-  Core/
-    A/
-      A.cs
-      A.cs.uid
-      A.tscn        # A sınıfından sahne varsa burada
+  A/
+    A.cs
+    A.cs.uid
+    A.tscn        # A sınıfından sahne varsa burada
+  Docs/
+  plugin.cfg
 ```
-- Bir sınıfın sahnesi varsa **aynı klasörde** durur.
-- Resource'un **sınıfı/scripti** her zaman addon'un `Core/<ResourceSinifi>/` klasöründedir. **Verisi**:
-  - addon ile birlikte gelmesi gerekiyorsa `addons/<Addon>/Resource/` altında,
-  - oyuna/projeye özelse (ör. tag listesi `Tags.tres`) proje kökündeki `Resource/` altındadır ve repoya girmez.
+- Bir sınıfın sahnesi varsa **aynı klasörde** durur. Sınıfa ait görsel/ses gibi varlıklar ve addon ile gelen resource dosyaları da o sınıfın klasöründe durur.
+- Resource'un **sınıfı/scripti** addon içinde kendi klasöründedir. Oyuna/projeye özel **verisi** (ör. tag listesi `Tags.tres`) proje kökündeki `Resource/` altındadır ve repoya girmez.
   ```
-  addons/AbilitySystem/Core/AbilityData/AbilityData.cs   # resource sınıfı
-  Resource/Abilities/Fireball.tres                       # projeye özel resource verisi
+  addons/AbilitySystem/AbilityData/AbilityData.cs   # resource sınıfı
+  Resource/Abilities/Fireball.tres                  # projeye özel resource verisi
   ```
 - Addon içindeki yollar `res://addons/<Addon>/...` şeklindedir.
 - Bir klasör = bir sınıf. Birden fazla alakasız sınıf aynı klasöre konmaz. (Sadece o sınıfa ait küçük yardımcı `enum`/`struct` aynı klasörde olabilir.)
@@ -73,7 +65,7 @@ addons/AbilitySystem/
 `[ext_resource type="Script" uid="..."]` + `metadata/_custom_type_script = "uid://..."`.
 
 ```ini
-[ext_resource type="Script" uid="uid://bbf8lyuj8omp1" path="res://addons/AbilitySystem/Core/Projectile/Projectile.cs" id="1_6p3um"]
+[ext_resource type="Script" uid="uid://bbf8lyuj8omp1" path="res://addons/AbilitySystem/Projectile/Projectile.cs" id="1_6p3um"]
 
 [node name="Projectile" type="Node2D"]
 script = ExtResource("1_6p3um")
