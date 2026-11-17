@@ -1,22 +1,14 @@
-# AGENTS.md — Tüm Yapay Zekalar İçin Zorunlu Talimat
+# AGENTS.md — Tags
 
-Bu repo **Tags** Godot C# addon'udur: hiyerarşik tag sistemi (Unreal `GameplayTag` benzeri). Bağımsızdır; başka hiçbir addon'u bilmez.
-AbilitySystem addon'u (`addons/AbilitySystem/`, Godot-AI-AbilitySystem) bu addon'u kullanır. Projede birden fazla yapay zeka çalışıyor.
+Godot 4 C# addon: hiyerarşik tag sistemi (Unreal `GameplayTag` benzeri). Namespace `Tags`. Bağımsızdır, başka addon'u bilmez. Birden fazla yapay zeka çalışıyor.
 
-**Herhangi bir şey yapmadan önce sırayla oku:**
+## Kurallar (özet; kod/sahne yazmadan önce `Docs/RULES.md`)
+- `Gameplay` ön eki yok. Tek sorumluluk; aşırı soyutlama, aşırı bağımlılık ve döngüsel bağımlılık yok.
+- Her sınıf `addons/Tags/<Sınıf>/` klasöründe. Projeye özel veri (ör. `Tags.tres`) proje kökündeki `Resource/`'da.
+- Sahne: düğüm doğrudan özel sınıftan yaratılır (`script` + `metadata/_custom_type_script`), UID `.cs.uid`'den.
+- Hot-path'te allocation/LINQ/boxing/string yok; çalışma anında tag'ler `int Id` ile karşılaştırılır.
+- Git bu klasörde çalışır. `Test/` kullanıcıya ait, dokunma. Kapsam dışı değişiklik yok, kuralları kendi başına değiştirme.
 
-1. [`Docs/RULES.md`](Docs/RULES.md) — bağlayıcı kurallar (AbilitySystem reposuyla ortak)
-2. [`Docs/Tag.md`](Docs/Tag.md) — tag sistemi tasarımı ve kararları
-3. [`Docs/PROGRESS.md`](Docs/PROGRESS.md) — yapılanlar / yapılmakta olanlar / yapılacaklar
-
-## Hatırlatma (özet — ayrıntı RULES.md'de)
-- İsimlerde **`Gameplay` ön eki yok**.
-- Modüler, okunaklı; **aşırı soyutlama ve aşırı bağımlılık yok**; tek sınıf her işi yapmaz.
-- **Her sınıf `addons/Tags/<Sinif>/` klasöründe** (ara `Core/`, `Assets/` klasörü yok), sahnesi de aynı klasörde. Projeye özel veriler (ör. `Tags.tres`) addon'a değil proje kökündeki `Resource/` klasörüne gider.
-- **Sahne kuralı:** Önce `Node2D`/`Node`/`Control` ekleyip sonra script bağlamak **yasak**. Düğüm doğrudan özel sınıftan, `script = ExtResource(...)` + `metadata/_custom_type_script = "uid://..."` ile yaratılır. UID'yi `.cs.uid` dosyasından al, uydurma.
-- **Performans önemli:** hot-path'te allocation/LINQ/boxing yok. Çalışma anında tag'ler `int Id` ile karşılaştırılır, string kullanılmaz.
-- Mümkün olduğunca **saf C#** (`List`, `Dictionary`, `event`, `struct`); gereksiz yere Godot `Array`/`Dictionary`/`Variant`/`Signal` kullanma.
-- Namespace `Tags`.
-- Git komutları bu klasörde çalışır; proje kökü repo değildir. **`Test/` klasörü kullanıcıya aittir, dokunma.**
-- `Docs/PROGRESS.md`'yi güncel tut; başkasının "Yapılıyor" işine dokunma.
-- Kapsam dışı değişiklik yapma; kuralları kendi başına değiştirme.
+## Dokümanlar (yalnızca gerekince oku)
+- `Docs/PROGRESS.md`: işe başlarken "Yapılıyor"a ekle, bitince güncelle; başkasının işine dokunma.
+- `Docs/Tag.md`: tasarım ve kararlar.

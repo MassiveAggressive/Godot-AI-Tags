@@ -1,23 +1,16 @@
-# İlerleme Takibi — Tags
+# İlerleme — Tags
 
-> Her AI/geliştirici: işe başlamadan önce oku, başlarken "Yapılıyor"a ekle, bitirince "Yapıldı"ya taşı.
-> Format: `- [x] Açıklama — [Yapan, YYYY-MM-DD]`
+> Başlarken "Yapılıyor"a `- [ ] iş — [Yapan, YYYY-MM-DD]` ekle, bitince "Yapıldı"ya tek satır taşı. Ayrıntı git geçmişinde ve `Tag.md`'de.
 
 ## Yapıldı
-- [x] Tag sistemi planı (`Docs/Tag.md`): kaynak `Tags.tres`, Autoload ile yükleme, ağ kapsam dışı — [Claude, 2026-11-16]
-- [x] `Tag`, `TagRegistry`, `TagList`, `TagLoader` (Autoload), `TagContainer`, `TagCountContainer` — [Claude, 2026-11-16]
-- [x] `TagContainer` Resource'a çevrildi; `InitialTags` editörde tag listesinden beslenen açılır menüyle seçiliyor — [Claude, 2026-11-16]
-- [x] `TagContainer` depolama yapısı ölçülüp karara bağlandı: `List<Tag>` kalıyor — [Claude, 2026-11-17]
-- [x] Bağımsız addon'a çevrildi (Godot-AI-Tags): namespace `Tags`, `plugin.cfg` + `TagsPlugin` (autoload ve `tags/tag_list_path` ayarını ekler), tag listesi projeye taşındı — [Claude, 2026-11-17]
-- [x] Klasör yapısı sadeleştirildi: `Core/` ve `Assets/` kalktı, sınıf klasörleri doğrudan addon kökünde (`RULES.md` §4, kullanıcı kararı) — [Claude, 2026-11-17]
+- `Tag`, `TagRegistry`, `TagList`, `TagLoader`, `TagContainer`, `TagCountContainer`, `TagsPlugin` (`Tag.md`)
 
 ## Yapılıyor
 - (boş)
 
 ## Yapılacak
-- [ ] İhtiyaç doğarsa: `TagQuery` / `TagRequirements` (karmaşık sorgular)
-- [ ] İhtiyaç doğarsa: `TagCountContainer` için tag'e özel dinleyici
+- [ ] `TagContainer.BuildTagOptions()` `internal` → `public` (başka addon'lar tek tag menüsü için kullanacak)
+- [ ] İhtiyaç doğarsa: `TagQuery` / `TagRequirements`, tag'e özel dinleyici
 
-## Sorunlar / Notlar
-- `Docs/RULES.md` AbilitySystem reposunda da aynı; değişirse ikisini birden güncelle.
-- Bu reponun ilk iki commit'i eski tek-repo geçmişinden filtrelenerek kopyalandı; o commit'lerde dosyalar namespace `AbilitySystem` ve proje kökü yollarıyla durur.
+## Notlar
+- İlk iki commit eski tek-repo geçmişinden filtrelendi (namespace `AbilitySystem`, eski yollar).
