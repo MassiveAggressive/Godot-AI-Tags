@@ -115,8 +115,11 @@ public partial class TagContainer : Resource
         property["hint_string"] = $"{(int)Variant.Type.String}/{(int)PropertyHint.Enum}:{BuildTagOptions()}";
     }
 
-    /// <summary>Comma separated, sorted tag names from Tags.tres including parents. Editor only.</summary>
-    internal static string BuildTagOptions()
+    /// <summary>
+    /// Comma separated, sorted tag names from Tags.tres including parents, for an editor dropdown
+    /// (<c>PropertyHint.Enum</c>) on a single tag name. Editor only; loads the tag list on every call.
+    /// </summary>
+    public static string BuildTagOptions()
     {
         var tagList = GD.Load<TagList>(TagList.GetListPath());
         if (tagList == null)

@@ -4,12 +4,12 @@
 
 ## Yapıldı
 - `Tag`, `TagRegistry`, `TagList`, `TagLoader`, `TagContainer`, `TagCountContainer`, `TagsPlugin` (`Tag.md`)
+- `TagContainer.BuildTagOptions()` public (başka addon'larda tek tag menüsü için) — [Claude, 2026-11-17]
 
 ## Yapılıyor
 - (boş)
 
 ## Yapılacak
-- [ ] `TagContainer.BuildTagOptions()` `internal` → `public` (başka addon'lar tek tag menüsü için kullanacak)
 - [ ] İhtiyaç doğarsa: `TagQuery` / `TagRequirements`, tag'e özel dinleyici
 
 ## Notlar
