@@ -4,7 +4,8 @@ using Godot;
 namespace Tags;
 
 /// <summary>
-/// Editor plugin: registers the TagLoader autoload and the "tags/tag_list_path" project setting.
+/// Editor plugin: registers the TagLoader autoload, the "tags/tag_list_path" project setting and the tag tree
+/// editors of the inspector (<see cref="TagInspectorPlugin"/>).
 /// </summary>
 [Tool]
 public partial class TagsPlugin : EditorPlugin
@@ -12,9 +13,22 @@ public partial class TagsPlugin : EditorPlugin
     private const string AutoloadName = "TagLoader";
     private const string AutoloadPath = "res://addons/Tags/TagLoader/TagLoader.cs";
 
+    private TagInspectorPlugin _inspector;
+
     public override void _EnterTree()
     {
         RegisterPathSetting();
+        _inspector = new TagInspectorPlugin();
+        AddInspectorPlugin(_inspector);
+    }
+
+    public override void _ExitTree()
+    {
+        if (_inspector == null)
+            return;
+
+        RemoveInspectorPlugin(_inspector);
+        _inspector = null;
     }
 
     public override void _EnablePlugin()

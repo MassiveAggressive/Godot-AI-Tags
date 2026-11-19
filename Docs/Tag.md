@@ -109,6 +109,7 @@ Hiyerarşi kuralı: `Ability.Fire.Ball` tag'ine sahip olan, `Ability.Fire` ve `A
 - `Tag` struct'ı Godot editöründe `Export` edilemez. Diğer resource'lar (`AbilityData`, `EffectData`) tag'leri `[Export] TagContainer` olarak tutar; tag'ler açılır menüden seçilir.
 - İsimler container ilk kullanıldığında **bir kez** id'ye çevrilir. Çalışma anında string karşılaştırması olmaz.
 - Tag isimleri `,` ve `:` içeremez (menü ipucunu bozar).
+- Inspector'da tag'ler ağaçtan seçilir (`TagInspectorPlugin`, `Systems/TagPicker.md`): `TagContainer` listesi ve `TagContainer.TagNameHint` ile işaretli tek tag string alanları.
 
 ## Bağımlılıklar
 ```

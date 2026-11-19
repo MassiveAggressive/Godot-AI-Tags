@@ -13,6 +13,13 @@ namespace Tags;
 [GlobalClass]
 public partial class TagContainer : Resource
 {
+    /// <summary>
+    /// Marks a single tag name string field for the editor's tag tree picker: set it as the field's
+    /// <c>hint_string</c> (with <c>PropertyHint.None</c>) in <c>_ValidateProperty</c>. Without the Tags plugin the
+    /// field is a plain text box.
+    /// </summary>
+    public const string TagNameHint = "tags:tag_name";
+
     private string[] _initialTags = Array.Empty<string>();
     private List<Tag> _tags;
 
@@ -119,13 +126,16 @@ public partial class TagContainer : Resource
     /// Comma separated, sorted tag names from Tags.tres including parents, for an editor dropdown
     /// (<c>PropertyHint.Enum</c>) on a single tag name. Editor only; loads the tag list on every call.
     /// </summary>
-    public static string BuildTagOptions()
+    public static string BuildTagOptions() => string.Join(",", CollectTagNames());
+
+    /// <summary>Sorted tag names from Tags.tres including parents (what TagRegistry registers). Editor only.</summary>
+    internal static SortedSet<string> CollectTagNames()
     {
+        var names = new SortedSet<string>(StringComparer.Ordinal);
         var tagList = GD.Load<TagList>(TagList.GetListPath());
         if (tagList == null)
-            return string.Empty;
+            return names;
 
-        var names = new SortedSet<string>(StringComparer.Ordinal);
         foreach (string tagName in tagList.Tags)
         {
             if (!TagRegistry.IsValidName(tagName))
@@ -138,7 +148,7 @@ public partial class TagContainer : Resource
             names.Add(tagName);
         }
 
-        return string.Join(",", names);
+        return names;
     }
 
     private void ResolveInitialTags()
