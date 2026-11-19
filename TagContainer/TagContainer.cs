@@ -20,6 +20,13 @@ public partial class TagContainer : Resource
     /// </summary>
     public const string TagNameHint = "tags:tag_name";
 
+    // Editor only: the tag list and the names built from it (see CollectTagNames).
+    private static TagList _tagList;
+    private static string[] _namesSource;
+    private static SortedSet<string> _names;
+    private static IReadOnlySet<string> _optionsSource;
+    private static string _options = string.Empty;
+
     private string[] _initialTags = Array.Empty<string>();
     private List<Tag> _tags;
 
@@ -124,19 +131,52 @@ public partial class TagContainer : Resource
 
     /// <summary>
     /// Comma separated, sorted tag names from Tags.tres including parents, for an editor dropdown
-    /// (<c>PropertyHint.Enum</c>) on a single tag name. Editor only; loads the tag list on every call.
+    /// (<c>PropertyHint.Enum</c>) on a single tag name. Editor only; cached until the tag list changes.
     /// </summary>
-    public static string BuildTagOptions() => string.Join(",", CollectTagNames());
+    public static string BuildTagOptions()
+    {
+        IReadOnlySet<string> names = CollectTagNames();
+        if (!ReferenceEquals(names, _optionsSource))
+        {
+            _options = string.Join(",", names);
+            _optionsSource = names;
+        }
 
-    /// <summary>Sorted tag names from Tags.tres including parents (what TagRegistry registers). Editor only.</summary>
-    internal static SortedSet<string> CollectTagNames()
+        return _options;
+    }
+
+    /// <summary>
+    /// Sorted tag names from Tags.tres including parents (what TagRegistry registers). Editor only. Cached: rebuilt
+    /// when the list's tag array is replaced (a tag added) or the list file changes.
+    /// </summary>
+    internal static IReadOnlySet<string> CollectTagNames()
+    {
+        // _ValidateProperty calls this for every tag field on every inspector refresh. Loading the list each time
+        // made a new C# wrapper per call; the GC finalizing those while Godot swapped their handles crashed the
+        // editor (FATAL gchandle.is_released). One kept reference avoids that and the repeated work.
+        string path = TagList.GetListPath();
+        if (_tagList == null || !GodotObject.IsInstanceValid(_tagList) || _tagList.ResourcePath != path)
+        {
+            _tagList = ResourceLoader.Exists(path) ? ResourceLoader.Load(path) as TagList : null;
+            _namesSource = null;
+        }
+
+        string[] tags = _tagList?.Tags;
+        if (_names != null && ReferenceEquals(tags, _namesSource))
+            return _names;
+
+        _names = BuildNames(tags);
+        _namesSource = tags;
+        return _names;
+    }
+
+    private static SortedSet<string> BuildNames(string[] tags)
     {
         var names = new SortedSet<string>(StringComparer.Ordinal);
-        var tagList = GD.Load<TagList>(TagList.GetListPath());
-        if (tagList == null)
+        if (tags == null)
             return names;
 
-        foreach (string tagName in tagList.Tags)
+        foreach (string tagName in tags)
         {
             if (!TagRegistry.IsValidName(tagName))
                 continue;

@@ -82,7 +82,7 @@ public partial class TagContainerProperty : EditorProperty
             return;
         }
 
-        SortedSet<string> known = TagContainer.CollectTagNames();
+        IReadOnlySet<string> known = TagContainer.CollectTagNames();
         Color warning = GetThemeColor("warning_color", "Editor");
         foreach (string name in tags)
         {

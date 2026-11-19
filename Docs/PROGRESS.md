@@ -9,6 +9,8 @@
 - Tag seçme ağacı (`Systems/TagPicker.md`): `TagTreePopup`, `TagContainerProperty`, `TagNameProperty`, `TagInspectorPlugin`, `TagContainer.TagNameHint`/`CollectTagNames`; derleme temiz, editör denemesi kullanıcıda — [Claude, 2026-11-19]
 - Tag ağacı ekleri (T6–T9, kullanıcı isteği): yeni tag kutusu (`Tags.tres`'e yazar), boş `TagContainer` alanları ağaçla düzenlenir (ilk tag'de yaratılır, son tag'de boşalır), ağaç alanın altında açılır, okunaklı görünüm; derleme temiz, editör denemesi kullanıcıda — [Claude, 2026-11-19]
 
+- Editör çökmesi düzeltildi: `CollectTagNames` her `_ValidateProperty`'de `TagList` yüklüyordu, çok tag alanlı resource'ta GC finalizer yarışı FATAL veriyordu; liste tek referansta, isimler önbellekte (dizi değişince yenilenir) — [Claude, 2026-11-19]
+
 ## Yapılıyor
 - (boş)
 
